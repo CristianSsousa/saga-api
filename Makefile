@@ -1,13 +1,13 @@
 .PHONY: run build migrate swagger test
 
 run:
-	go run ./cmd/server
+	go run .
 
 build:
-	go build -o bin/server ./cmd/server
+	go build -o bin/server .
 
 swagger:
-	swag init -g cmd/server/main.go -o docs
+	swag init -g main.go -o docs
 
 test:
 	go test ./...

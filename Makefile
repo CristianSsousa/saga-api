@@ -13,8 +13,9 @@ test:
 	go test ./...
 
 migrate:
-	@echo "Run migrations manually against your Neon DB:"
-	@echo "psql \$$DATABASE_URL -f migrations/001_create_users.sql"
-	@echo "psql \$$DATABASE_URL -f migrations/002_create_media_cache.sql"
-	@echo "psql \$$DATABASE_URL -f migrations/003_create_user_library.sql"
-	@echo "psql \$$DATABASE_URL -f migrations/004_triggers.sql"
+	@export $$(grep -v '^#' .env | xargs) && \
+	psql "$$DATABASE_URL" -f migrations/001_create_users.sql && \
+	psql "$$DATABASE_URL" -f migrations/002_create_media_cache.sql && \
+	psql "$$DATABASE_URL" -f migrations/003_create_user_library.sql && \
+	psql "$$DATABASE_URL" -f migrations/004_triggers.sql && \
+	echo "✓ migrations applied"

@@ -19,6 +19,7 @@
 package main
 
 import (
+	"embed"
 	"log"
 	"os"
 
@@ -32,6 +33,9 @@ import (
 	"github.com/CristianSsousa/saga-api/internal/usecase"
 )
 
+//go:embed migrations
+var migrationsFS embed.FS
+
 func main() {
 	_ = godotenv.Load() // loads .env if present; ignored in production
 
@@ -44,6 +48,12 @@ func main() {
 	if port == "" {
 		port = "8080"
 	}
+
+	// Auto-migrate on startup
+	if err := db.RunMigrations(migrationsFS, databaseURL); err != nil {
+		log.Fatalf("migrations failed: %v", err)
+	}
+	log.Println("migrations applied")
 
 	// Database
 	pool, err := db.Connect(databaseURL)

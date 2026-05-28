@@ -72,6 +72,9 @@ func (h *LibraryHandler) List(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to list library"})
 		return
 	}
+	if items == nil {
+		items = []domain.LibraryItem{}
+	}
 
 	hasMore := len(items) > limit
 	if hasMore {

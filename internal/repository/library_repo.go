@@ -176,13 +176,14 @@ func scanLibraryRows(rows pgx.Rows) ([]domain.LibraryItem, error) {
 		var item domain.LibraryItem
 		var statusStr, mediaTypeStr string
 		var metaRaw []byte
+		var notes, coverURL *string
 		var startedAt, finishedAt *string
 
 		err := rows.Scan(
-			&item.ID, &item.UserID, &statusStr, &item.UserRating, &item.Notes,
+			&item.ID, &item.UserID, &statusStr, &item.UserRating, &notes,
 			&startedAt, &finishedAt, &item.CreatedAt, &item.UpdatedAt,
 			&item.Media.ExternalID, &item.Media.Source, &mediaTypeStr,
-			&item.Media.Title, &item.Media.CoverURL, &metaRaw,
+			&item.Media.Title, &coverURL, &metaRaw,
 		)
 		if err != nil {
 			if errors.Is(err, pgx.ErrNoRows) {
@@ -192,6 +193,12 @@ func scanLibraryRows(rows pgx.Rows) ([]domain.LibraryItem, error) {
 		}
 		item.Status = domain.Status(statusStr)
 		item.Media.Type = domain.MediaType(mediaTypeStr)
+		if notes != nil {
+			item.Notes = *notes
+		}
+		if coverURL != nil {
+			item.Media.CoverURL = *coverURL
+		}
 		item.StartedAt = startedAt
 		item.FinishedAt = finishedAt
 		if metaRaw != nil {

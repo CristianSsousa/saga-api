@@ -70,6 +70,7 @@ func (h *LibraryHandler) List(c *gin.Context) {
 
 	items, err := h.libraryUC.List(c.Request.Context(), userID, filter)
 	if err != nil {
+		log.Printf("[library.List] userID=%s filter=%+v err=%v", userID, filter, err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to list library"})
 		return
 	}

@@ -22,6 +22,8 @@ import (
 	"log"
 	"os"
 
+	"github.com/joho/godotenv"
+
 	deliveryhttp "github.com/CristianSsousa/saga-api/internal/delivery/http"
 	"github.com/CristianSsousa/saga-api/internal/delivery/http/handler"
 	"github.com/CristianSsousa/saga-api/internal/infrastructure/apis"
@@ -31,6 +33,8 @@ import (
 )
 
 func main() {
+	_ = godotenv.Load() // loads .env if present; ignored in production
+
 	// Config from environment
 	databaseURL := mustEnv("DATABASE_URL")
 	jwtSecret := mustEnv("JWT_SECRET")

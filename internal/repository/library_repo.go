@@ -23,6 +23,10 @@ func (r *libraryRepo) Add(ctx context.Context, userID, mediaID string, status do
 	err := r.db.QueryRow(ctx,
 		`INSERT INTO user_library (user_id, media_id, status)
 		 VALUES ($1, $2, $3)
+		 ON CONFLICT (user_id, media_id) DO UPDATE
+		   SET status     = EXCLUDED.status,
+		       deleted_at = NULL,
+		       updated_at = now()
 		 RETURNING id`,
 		userID, mediaID, string(status),
 	).Scan(&id)

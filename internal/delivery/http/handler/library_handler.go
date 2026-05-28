@@ -2,6 +2,7 @@ package handler
 
 import (
 	"errors"
+	"log"
 	"net/http"
 	"strconv"
 
@@ -117,6 +118,7 @@ func (h *LibraryHandler) Add(c *gin.Context) {
 		Status: req.Status,
 	})
 	if err != nil {
+		log.Printf("[library.Add] userID=%s media=%+v status=%s err=%v", userID, req.Media, req.Status, err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to add to library"})
 		return
 	}
